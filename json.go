@@ -23,10 +23,11 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	dat, err := json.Marshal(payload)
 	if err != nil {
 		log.Printf("failed to marshal response: %v", payload)
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(code)
+
+	w.Header().Set("Content-Type", "application/json") // Use Set instead of Add for Content-Type
+	w.WriteHeader(code)                                 // Set the status code before writing data
 	w.Write(dat)
 }
